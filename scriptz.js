@@ -1,3 +1,50 @@
+// Inline script for pagination (place after product grid in HTML)
+const products = document.querySelectorAll('.js-flex-grid-block');
+const loadMoreButton = document.getElementById('loadMore');
+let visibleProducts = 8;
+const productsPerPage = 8;
+
+function initializeProducts() {
+    if (!products.length || !loadMoreButton) {
+        console.warn('Products or Load More button not found.');
+        if (loadMoreButton) loadMoreButton.style.display = 'none';
+        return;
+    }
+    products.forEach((product, index) => {
+        if (index >= visibleProducts) {
+            product.classList.add('product-hidden');
+        } else {
+            product.classList.remove('product-hidden');
+        }
+    });
+    updateLoadMoreButton();
+}
+
+function loadMoreProducts() {
+    const totalProducts = products.length;
+    const nextVisible = Math.min(visibleProducts + productsPerPage, totalProducts);
+    for (let i = visibleProducts; i < nextVisible; i++) {
+        products[i].classList.remove('product-hidden');
+    }
+    visibleProducts = nextVisible;
+    updateLoadMoreButton();
+    console.log(`Loaded ${productsPerPage} products. Total visible: ${visibleProducts}`);
+}
+
+function updateLoadMoreButton() {
+    const totalProducts = products.length;
+    loadMoreButton.style.display = visibleProducts >= totalProducts ? 'none' : 'block';
+}
+
+// Run immediately
+initializeProducts();
+
+// Attach Load More event listener
+if (loadMoreButton) {
+    loadMoreButton.addEventListener('click', loadMoreProducts);
+}
+
+// Rest of the JavaScript (on DOMContentLoaded)
 document.addEventListener('DOMContentLoaded', function () {
     // Mobile menu toggle
     function toggleMenu() {
@@ -5,58 +52,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (nav) nav.classList.toggle('active');
     }
 
-    // Pagination functionality
-    const products = document.querySelectorAll('.js-flex-grid-block');
-    const loadMoreButton = document.getElementById('loadMore');
-    let visibleProducts = 8;
-    const productsPerPage = 8;
-
-    function initializeProducts() {
-        if (!products.length || !loadMoreButton) {
-            console.warn('Products or Load More button not found.');
-            if (loadMoreButton) loadMoreButton.style.display = 'none';
-            return;
-        }
-        products.forEach((product, index) => {
-            if (index >= visibleProducts) {
-                product.classList.add('product-hidden');
-            } else {
-                product.classList.remove('product-hidden');
-            }
-        });
-        updateLoadMoreButton();
-    }
-
-    function loadMoreProducts() {
-        const totalProducts = products.length;
-        const nextVisible = Math.min(visibleProducts + productsPerPage, totalProducts);
-
-        for (let i = visibleProducts; i < nextVisible; i++) {
-            products[i].classList.remove('product-hidden');
-        }
-
-        visibleProducts = nextVisible;
-        updateLoadMoreButton();
-        console.log(`Loaded ${productsPerPage} products. Total visible: ${visibleProducts}`);
-    }
-
-    function updateLoadMoreButton() {
-        const totalProducts = products.length;
-        loadMoreButton.style.display = visibleProducts >= totalProducts ? 'none' : 'block';
-    }
-
-    // Initialize products
-    initializeProducts();
-
-    // Attach Load More event listener
-    if (loadMoreButton) {
-        loadMoreButton.addEventListener('click', loadMoreProducts);
-    }
-
     // Gallery thumbnails
     const thumbnails = document.querySelectorAll('.gallerythumb');
     const mainImage = document.querySelector('.mainpic');
-
     thumbnails.forEach(thumb => {
         thumb.addEventListener('click', function (e) {
             e.preventDefault();
@@ -136,7 +134,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // Tab functionality
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabPanels = document.querySelectorAll('.tab-panel');
-
     tabBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             console.log('Tab clicked:', btn.textContent);
