@@ -1290,6 +1290,14 @@
     }
 }
 
+@media screen and (min-width: 300px) and (max-width: 1000px) {
+    .card__image {
+        width: 100% !important;
+        height: auto !important;
+        object-fit: cover;
+    }
+}
+
 @media (max-width: 768px) {
     .filter-bar-nav {
         flex-direction: column;
@@ -1712,6 +1720,7 @@
     color: #fff; /* White text on hover for contrast */
     border-color: #1e1919; /* Maintains border color for consistency */
 }
+
 
 
 
